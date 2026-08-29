@@ -1,0 +1,11 @@
+node_modules/
+dist/
+qa/
+website.log
+.vite-preview*.log
+concepts/
+public/concepts/
+masked-paste-concept.html
+shared-axis-concept.html
+AGENTS.md
+design-qa.md
