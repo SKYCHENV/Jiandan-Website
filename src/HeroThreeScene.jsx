@@ -13,6 +13,7 @@ export const DEFAULT_SCENE_TUNING = Object.freeze({
 });
 
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
+const asset = (path) => `${import.meta.env.BASE_URL}assets/${path}`;
 const smooth = (value) => {
   const t = clamp01(value);
   return t * t * (3 - 2 * t);
@@ -111,10 +112,10 @@ export function HeroThreeScene({tuning = DEFAULT_SCENE_TUNING}) {
     let loadedAt = null;
     manager.onLoad = () => { loadedAt = performance.now(); };
     const loader = new THREE.TextureLoader(manager);
-    const workspaceTexture = textureSettings(loader.load("/assets/hero-workspace-v3.png"), renderer);
-    const timelineTexture = textureSettings(loader.load("/assets/hero-timeline-v4.png"), renderer);
-    const visualTexture = textureSettings(loader.load("/assets/hero-visual-v2.png"), renderer);
-    const clipTexture = textureSettings(loader.load("/assets/hero-clip-v2.png"), renderer);
+    const workspaceTexture = textureSettings(loader.load(asset("hero-workspace-v3.webp")), renderer);
+    const timelineTexture = textureSettings(loader.load(asset("hero-timeline-v4.webp")), renderer);
+    const visualTexture = textureSettings(loader.load(asset("hero-visual-v2.webp")), renderer);
+    const clipTexture = textureSettings(loader.load(asset("hero-clip-v2.webp")), renderer);
 
     const workspace = new THREE.Group();
     const workspaceWidth = 1050;

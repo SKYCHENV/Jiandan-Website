@@ -38,10 +38,11 @@ const copy = {
 };
 
 const githubUrl = "https://github.com/SKYCHENV/Jiandan";
-const downloadUrl = "/downloads/Jiandan-Windows.zip";
+const publicPath = (path) => `${import.meta.env.BASE_URL}${path}`;
+const downloadUrl = publicPath("downloads/Jiandan-Windows.zip");
 
 function Brand({compact = false}) {
-  return <a className={`brand ${compact ? "brand--compact" : ""}`} href="#top" aria-label="剪蛋首页"><img src="/assets/jiandan.png" alt="" /><span>剪蛋</span></a>;
+  return <a className={`brand ${compact ? "brand--compact" : ""}`} href="#top" aria-label="剪蛋首页"><img src={publicPath("assets/jiandan.png")} alt="" /><span>剪蛋</span></a>;
 }
 
 function AppHeader({language, setLanguage, menuOpen, setMenuOpen, t}) {
@@ -98,7 +99,7 @@ function HowItWorks({t}) {
 
 function ProductProof({t}) {
   return <section className="proof section-light"><div className="proof-copy reveal"><p className="eyebrow eyebrow--blue">{t.proofKicker}</p><h2>{t.proofTitle}</h2><p>{t.proofBody}</p><div className="status-line"><span /><strong>{t.status}</strong><small>{t.enabled}</small></div></div>
-    <div className="demo-window reveal"><div className="window-bar"><i /><i /><i /><span>剪蛋 × 剪映</span></div><video src="/assets/jiandan-demo.mp4" muted loop playsInline autoPlay poster="/assets/product-demo-frame.png" aria-label="剪蛋真实工作演示" /></div>
+    <div className="demo-window reveal"><div className="window-bar"><i /><i /><i /><span>剪蛋 × 剪映</span></div><video src={publicPath("assets/jiandan-demo.mp4")} muted loop playsInline autoPlay poster={publicPath("assets/product-demo-frame.webp")} aria-label="剪蛋真实工作演示" /></div>
   </section>;
 }
 
@@ -107,12 +108,12 @@ function Film({t}) {
   const [playing, setPlaying] = useState(false);
   const toggle = async () => {if (!videoRef.current) return; if (videoRef.current.paused) {await videoRef.current.play(); setPlaying(true);} else {videoRef.current.pause(); setPlaying(false);}};
   return <section className="film" id="story"><div className="film-heading reveal"><p className="eyebrow">{t.filmKicker}</p><h2>{t.filmTitle.split("\n").map((line) => <span key={line}>{line}</span>)}</h2></div>
-    <div className="film-player reveal"><video ref={videoRef} src="/assets/jiandan-film.mp4" playsInline controls={playing} onPause={() => setPlaying(false)} onPlay={() => setPlaying(true)} />{!playing && <button className="play-button" onClick={toggle}><Play weight="fill" /><span>{t.play}</span></button>}</div>
+    <div className="film-player reveal"><video ref={videoRef} src={publicPath("assets/jiandan-film.mp4")} playsInline controls={playing} onPause={() => setPlaying(false)} onPlay={() => setPlaying(true)} />{!playing && <button className="play-button" onClick={toggle}><Play weight="fill" /><span>{t.play}</span></button>}</div>
   </section>;
 }
 
 function Download({t}) {
-  return <section className="download-section"><img src="/assets/jiandan.png" alt="剪蛋" className="download-logo reveal" /><div className="reveal"><h2>{t.finalTitle}</h2><p>{t.finalBody}</p></div><div className="download-actions reveal"><a className="button button--primary" href={downloadUrl} download><WindowsLogo weight="fill" />{t.finalCta}</a><a className="text-link" href={githubUrl} target="_blank" rel="noreferrer">{t.source}<ArrowRight weight="bold" /></a></div></section>;
+  return <section className="download-section"><img src={publicPath("assets/jiandan.png")} alt="剪蛋" className="download-logo reveal" /><div className="reveal"><h2>{t.finalTitle}</h2><p>{t.finalBody}</p></div><div className="download-actions reveal"><a className="button button--primary" href={downloadUrl} download><WindowsLogo weight="fill" />{t.finalCta}</a><a className="text-link" href={githubUrl} target="_blank" rel="noreferrer">{t.source}<ArrowRight weight="bold" /></a></div></section>;
 }
 
 export function App() {
