@@ -322,8 +322,8 @@ export function HeroThreeScene({tuning = DEFAULT_SCENE_TUNING}) {
       camera.position.set(0, 0, height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))));
       camera.updateProjectionMatrix();
       if (width <= 760) {
-        baseScale = .48;
-        baseX = -70;
+        baseScale = .44;
+        baseX = -34;
         baseY = -100;
         guideOffsetX = 80;
       } else if (width <= 1080) {
