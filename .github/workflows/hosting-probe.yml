@@ -1,0 +1,45 @@
+name: Hosting probe
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-and-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Resolve hosting target
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$(dig +short @198.251.90.216 jiandan.qd.je A | tail -n 1)"
+          if [[ -z "$target" ]]; then
+            target="185.27.134.24"
+          fi
+          echo "ip=$target" >> "$GITHUB_OUTPUT"
+          echo "Hosting target: $target"
+
+      - name: Run one-time deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent \
+            --max-time 180 \
+            --resolve "jiandan.qd.je:80:${{ steps.target.outputs.ip }}" \
+            "http://jiandan.qd.je/deploy-jiandan-20260830.php" \
+            | tee deploy-result.txt
+          grep -q "DEPLOY_OK" deploy-result.txt
+
+      - name: Verify hosted files
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=(--fail --show-error --silent --max-time 60 --resolve "jiandan.qd.je:80:${{ steps.target.outputs.ip }}")
+          curl "${base[@]}" "http://jiandan.qd.je/" -o index.html
+          grep -q "剪蛋" index.html
+          js_path="$(grep -oE '/assets/[^\" ]+\.js' index.html | head -n 1)"
+          test -n "$js_path"
+          curl "${base[@]}" "http://jiandan.qd.je${js_path}" -o app.js
+          test -s app.js
+          echo "HOSTING_VERIFY_OK js=$js_path bytes=$(wc -c < app.js)"
