@@ -6,10 +6,12 @@ const CODE_TTL_SECONDS = 10 * 60;
 const CODE_RETRY_SECONDS = 60;
 const VERIFY_WINDOW_SECONDS = 10 * 60;
 const VERIFY_MAX_FAILURES = 8;
-const BUILD_RESEND_API_KEY =
-  typeof __JIANDAN_RESEND_API_KEY__ === "string" ? __JIANDAN_RESEND_API_KEY__ : "";
-const BUILD_AUTH_EMAIL_FROM =
-  typeof __JIANDAN_AUTH_EMAIL_FROM__ === "string" ? __JIANDAN_AUTH_EMAIL_FROM__ : "";
+const BUILD_BREVO_API_KEY =
+  typeof __JIANDAN_BREVO_API_KEY__ === "string" ? __JIANDAN_BREVO_API_KEY__ : "";
+const BUILD_BREVO_FROM_EMAIL =
+  typeof __JIANDAN_BREVO_FROM_EMAIL__ === "string" ? __JIANDAN_BREVO_FROM_EMAIL__ : "";
+const BUILD_BREVO_FROM_NAME =
+  typeof __JIANDAN_BREVO_FROM_NAME__ === "string" ? __JIANDAN_BREVO_FROM_NAME__ : "";
 const encoder = new TextEncoder();
 
 function json(status, body) {
@@ -129,24 +131,34 @@ async function putRecord(store, key, value) {
 
 async function sendCode(env, email, code) {
   if (env.AUTH_DEV_RETURN_CODE === "1") return;
-  const apiKey = env.RESEND_API_KEY || BUILD_RESEND_API_KEY;
-  const from = env.AUTH_EMAIL_FROM || BUILD_AUTH_EMAIL_FROM;
-  if (!apiKey || !from) throw new Error("mail_not_configured");
-  const response = await fetch("https://api.resend.com/emails", {
+  const apiKey = env.BREVO_API_KEY || BUILD_BREVO_API_KEY;
+  const fromEmail = env.BREVO_FROM_EMAIL || BUILD_BREVO_FROM_EMAIL;
+  const fromName = env.BREVO_FROM_NAME || BUILD_BREVO_FROM_NAME || "剪蛋";
+  if (!apiKey || !fromEmail) throw new Error("mail_not_configured");
+
+  const request = env.AUTH_FETCH || fetch;
+  const response = await request("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
-      authorization: `Bearer ${apiKey}`,
+      "api-key": apiKey,
       "content-type": "application/json",
+      accept: "application/json",
     },
     body: JSON.stringify({
-      from,
-      to: [email],
+      sender: { email: fromEmail, name: fromName },
+      to: [{ email }],
       subject: `${code} 是你的剪蛋验证码`,
-      text: `你的剪蛋验证码是 ${code}。验证码 10 分钟内有效。若非本人操作，请忽略此邮件。`,
-      html: `<div style="font-family:Arial,sans-serif;color:#111;max-width:520px;margin:auto;padding:32px"><h1 style="font-size:24px">登录剪蛋</h1><p>你的验证码是：</p><p style="font-size:36px;font-weight:700;letter-spacing:8px;color:#0A84FF">${code}</p><p style="color:#666">验证码 10 分钟内有效。若非本人操作，请忽略此邮件。</p></div>`,
+      textContent: `你的剪蛋验证码是 ${code}。验证码 10 分钟内有效。若非本人操作，请忽略此邮件。`,
+      htmlContent: `<div style="font-family:Arial,sans-serif;color:#111;max-width:520px;margin:auto;padding:32px"><h1 style="font-size:24px">登录剪蛋</h1><p>你的验证码是：</p><p style="font-size:36px;font-weight:700;letter-spacing:8px;color:#0A84FF">${code}</p><p style="color:#666">验证码 10 分钟内有效。若非本人操作，请忽略此邮件。</p></div>`,
+      tags: ["login-code"],
     }),
   });
   if (!response.ok) throw new Error(`mail_${response.status}`);
+  const result = await response.json();
+  if (!result?.messageId) {
+    console.error("Brevo did not return a message ID");
+    throw new Error("mail_provider");
+  }
 }
 
 async function issueSession(env, email, deviceId, generation) {
@@ -293,7 +305,7 @@ export async function onRequestPost({ request, env }) {
     if (error?.message === "mail_not_configured") {
       return failure(503, "mail_not_configured", "验证码邮件服务尚未完成配置");
     }
-    if (/^mail_\d{3}$/.test(error?.message || "")) {
+    if (/^mail_(?:\d{3}|provider)$/.test(error?.message || "")) {
       return failure(503, "mail_delivery_unavailable", "验证码邮件暂时无法发送");
     }
     return failure(500, "service_unavailable", "登录服务暂时不可用");

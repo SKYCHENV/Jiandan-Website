@@ -110,6 +110,32 @@ test("code requests are rate limited", async () => {
   assert.equal(repeated.body.error.code, "rate_limited");
 });
 
+test("production code requests use the Brevo transactional email API", async () => {
+  const requests = [];
+  const env = {
+    ...environment(),
+    AUTH_DEV_RETURN_CODE: "0",
+    BREVO_API_KEY: "test-api-key",
+    BREVO_FROM_EMAIL: "login@mail.jiandan.qd.je",
+    BREVO_FROM_NAME: "剪蛋",
+    AUTH_FETCH: async (url, options) => {
+      requests.push({ url, options });
+      return new Response(JSON.stringify({ messageId: "message-id" }));
+    },
+  };
+
+  const result = await post(env, "request-code", { email: "delivery@example.com" });
+  assert.equal(result.status, 200);
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].url, "https://api.brevo.com/v3/smtp/email");
+  assert.equal(requests[0].options.headers["api-key"], "test-api-key");
+  const payload = JSON.parse(requests[0].options.body);
+  assert.deepEqual(payload.to, [{ email: "delivery@example.com" }]);
+  assert.deepEqual(payload.sender, { email: "login@mail.jiandan.qd.je", name: "剪蛋" });
+  assert.match(payload.subject, /^\d{6} 是你的剪蛋验证码$/);
+  assert.match(payload.textContent, /验证码是 \d{6}/);
+});
+
 test("verification attempts are capped", async () => {
   const env = environment();
   const requested = await post(env, "request-code", { email: "attempts@example.com" });

@@ -19,8 +19,9 @@ await build({
   platform: "browser",
   target: "es2022",
   define: {
-    __JIANDAN_RESEND_API_KEY__: JSON.stringify(process.env.JIANDAN_BUILD_RESEND_API_KEY || ""),
-    __JIANDAN_AUTH_EMAIL_FROM__: JSON.stringify(process.env.JIANDAN_BUILD_AUTH_EMAIL_FROM || ""),
+    __JIANDAN_BREVO_API_KEY__: JSON.stringify(process.env.JIANDAN_BUILD_BREVO_API_KEY || ""),
+    __JIANDAN_BREVO_FROM_EMAIL__: JSON.stringify(process.env.JIANDAN_BUILD_BREVO_FROM_EMAIL || ""),
+    __JIANDAN_BREVO_FROM_NAME__: JSON.stringify(process.env.JIANDAN_BUILD_BREVO_FROM_NAME || ""),
   },
   logLevel: "info",
 });
