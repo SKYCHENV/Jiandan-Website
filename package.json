@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/prepare-sites-build.mjs",
+    "build:edgeone": "npm run build && node scripts/prepare-edgeone-upload.mjs",
     "preview": "vite preview",
     "test:sites": "node --test tests/sites-worker.test.mjs"
   },
   "dependencies": {
+    "@edgeone/pages-blob": "^0.0.16",
     "@phosphor-icons/react": "^2.1.10",
     "@vitejs/plugin-react": "5.0.4",
     "animejs": "^4.5.0",
@@ -17,5 +19,8 @@
     "react-dom": "19.2.0",
     "three": "^0.185.1",
     "vite": "6.4.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12"
   }
 }

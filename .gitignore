@@ -3,6 +3,9 @@ dist/
 qa/
 website.log
 .vite-preview*.log
+.deploy/
+.edgeone/
+/jiandan-site-*.zip
 concepts/
 public/concepts/
 masked-paste-concept.html

@@ -1,0 +1,132 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { onRequestPost } from "../edge-functions/api/auth/[[default]].js";
+
+class MemoryKv {
+  constructor() {
+    this.values = new Map();
+  }
+
+  async get(key) {
+    return this.values.get(key) ?? null;
+  }
+
+  async put(key, value) {
+    this.values.set(key, value);
+  }
+
+  clearRateLimits() {
+    for (const key of this.values.keys()) {
+      if (key.startsWith("code_rate_")) this.values.delete(key);
+    }
+  }
+}
+
+function environment() {
+  return {
+    AUTH_SECRET: "test-secret-that-is-long-enough-for-auth-tests",
+    AUTH_DEV_RETURN_CODE: "1",
+    AUTH_KV: new MemoryKv(),
+  };
+}
+
+async function post(env, endpoint, body) {
+  const response = await onRequestPost({
+    env,
+    request: new Request(`https://example.test/api/auth/${endpoint}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    }),
+  });
+  return { status: response.status, body: await response.json() };
+}
+
+test("email code creates a restorable session", async () => {
+  const env = environment();
+  const requested = await post(env, "request-code", { email: "Hello@Example.com" });
+  assert.equal(requested.status, 200);
+  assert.match(requested.body.data.dev_code, /^\d{6}$/);
+
+  const verified = await post(env, "verify", {
+    email: "hello@example.com",
+    code: requested.body.data.dev_code,
+    device_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    device_name: "Test PC",
+  });
+  assert.equal(verified.status, 200);
+  assert.equal(verified.body.data.session.email, "hello@example.com");
+
+  const session = await post(env, "session", {
+    access_token: verified.body.data.session.access_token,
+  });
+  assert.equal(session.status, 200);
+  assert.equal(session.body.data.email, "hello@example.com");
+});
+
+test("a new device invalidates the previous device", async () => {
+  const env = environment();
+  const requested = await post(env, "request-code", { email: "one@example.com" });
+  const first = await post(env, "verify", {
+    email: "one@example.com",
+    code: requested.body.data.dev_code,
+    device_id: "11111111-1111-4111-8111-111111111111",
+  });
+  env.AUTH_KV.clearRateLimits();
+  const requestedAgain = await post(env, "request-code", { email: "one@example.com" });
+  const second = await post(env, "verify", {
+    email: "one@example.com",
+    code: requestedAgain.body.data.dev_code,
+    device_id: "22222222-2222-4222-8222-222222222222",
+  });
+  assert.equal(second.status, 200);
+
+  const oldSession = await post(env, "session", {
+    access_token: first.body.data.session.access_token,
+  });
+  assert.equal(oldSession.status, 401);
+  assert.equal(oldSession.body.error.code, "session_invalid");
+});
+
+test("a verification code can only be used once", async () => {
+  const env = environment();
+  const requested = await post(env, "request-code", { email: "once@example.com" });
+  const payload = {
+    email: "once@example.com",
+    code: requested.body.data.dev_code,
+    device_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+  };
+  assert.equal((await post(env, "verify", payload)).status, 200);
+  const reused = await post(env, "verify", payload);
+  assert.equal(reused.status, 401);
+  assert.equal(reused.body.error.code, "invalid_code");
+});
+
+test("code requests are rate limited", async () => {
+  const env = environment();
+  assert.equal((await post(env, "request-code", { email: "rate@example.com" })).status, 200);
+  const repeated = await post(env, "request-code", { email: "rate@example.com" });
+  assert.equal(repeated.status, 429);
+  assert.equal(repeated.body.error.code, "rate_limited");
+});
+
+test("verification attempts are capped", async () => {
+  const env = environment();
+  const requested = await post(env, "request-code", { email: "attempts@example.com" });
+  const wrongCode = requested.body.data.dev_code === "000000" ? "000001" : "000000";
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const response = await post(env, "verify", {
+      email: "attempts@example.com",
+      code: wrongCode,
+      device_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    });
+    assert.equal(response.status, 401);
+  }
+  const blocked = await post(env, "verify", {
+    email: "attempts@example.com",
+    code: wrongCode,
+    device_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+  });
+  assert.equal(blocked.status, 429);
+  assert.equal(blocked.body.error.code, "too_many_attempts");
+});
