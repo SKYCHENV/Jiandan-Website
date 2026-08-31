@@ -22,6 +22,7 @@ await build({
     __JIANDAN_BREVO_API_KEY__: JSON.stringify(process.env.JIANDAN_BUILD_BREVO_API_KEY || ""),
     __JIANDAN_BREVO_FROM_EMAIL__: JSON.stringify(process.env.JIANDAN_BUILD_BREVO_FROM_EMAIL || ""),
     __JIANDAN_BREVO_FROM_NAME__: JSON.stringify(process.env.JIANDAN_BUILD_BREVO_FROM_NAME || ""),
+    __JIANDAN_ADMIN_EMAILS__: JSON.stringify(process.env.JIANDAN_BUILD_ADMIN_EMAILS || ""),
   },
   logLevel: "info",
 });

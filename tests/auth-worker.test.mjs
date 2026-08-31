@@ -15,6 +15,14 @@ class MemoryKv {
     this.values.set(key, value);
   }
 
+  async delete(key) {
+    this.values.delete(key);
+  }
+
+  async list({ prefix = "" } = {}) {
+    return { blobs: [...this.values.keys()].filter((key) => key.startsWith(prefix)).map((key) => ({ key })) };
+  }
+
   clearRateLimits() {
     for (const key of this.values.keys()) {
       if (key.startsWith("code_rate_")) this.values.delete(key);
@@ -26,6 +34,7 @@ function environment() {
   return {
     AUTH_SECRET: "test-secret-that-is-long-enough-for-auth-tests",
     AUTH_DEV_RETURN_CODE: "1",
+    ADMIN_EMAILS: "owner@example.com",
     AUTH_KV: new MemoryKv(),
   };
 }
@@ -155,4 +164,63 @@ test("verification attempts are capped", async () => {
   });
   assert.equal(blocked.status, 429);
   assert.equal(blocked.body.error.code, "too_many_attempts");
+});
+
+test("verified desktop users appear in the admin overview", async () => {
+  const env = environment();
+  const requested = await post(env, "request-code", { email: "member@example.com" });
+  await post(env, "verify", {
+    email: "member@example.com",
+    code: requested.body.data.dev_code,
+    device_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    device_name: "Editing PC",
+  });
+  env.AUTH_KV.clearRateLimits();
+  const adminCode = await post(env, "admin-request-code", { email: "owner@example.com" });
+  const admin = await post(env, "admin-verify", {
+    email: "owner@example.com",
+    code: adminCode.body.data.dev_code,
+  });
+  const overview = await post(env, "admin-overview", { token: admin.body.data.token });
+
+  assert.equal(overview.status, 200);
+  assert.deepEqual(overview.body.data.stats, { total: 1, active: 1, blocked: 0, deleted: 0 });
+  assert.equal(overview.body.data.users[0].email, "member@example.com");
+  assert.equal(overview.body.data.users[0].device_name, "Editing PC");
+  assert.equal("device_id" in overview.body.data.users[0], false);
+});
+
+test("non-admin emails cannot enter the admin console", async () => {
+  const env = environment();
+  const response = await post(env, "admin-request-code", { email: "member@example.com" });
+  assert.equal(response.status, 403);
+  assert.equal(response.body.error.code, "admin_forbidden");
+});
+
+test("blocking a user invalidates the desktop session immediately", async () => {
+  const env = environment();
+  const requested = await post(env, "request-code", { email: "member@example.com" });
+  const desktop = await post(env, "verify", {
+    email: "member@example.com",
+    code: requested.body.data.dev_code,
+    device_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+  });
+  env.AUTH_KV.clearRateLimits();
+  const adminCode = await post(env, "admin-request-code", { email: "owner@example.com" });
+  const admin = await post(env, "admin-verify", {
+    email: "owner@example.com",
+    code: adminCode.body.data.dev_code,
+  });
+  const update = await post(env, "admin-update-user", {
+    token: admin.body.data.token,
+    email: "member@example.com",
+    status: "blocked",
+  });
+  const oldSession = await post(env, "session", {
+    access_token: desktop.body.data.session.access_token,
+  });
+
+  assert.equal(update.status, 200);
+  assert.equal(oldSession.status, 401);
+  assert.equal(oldSession.body.error.code, "session_invalid");
 });
