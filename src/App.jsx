@@ -39,7 +39,7 @@ const copy = {
 
 const githubUrl = "https://github.com/SKYCHENV/Jiandan";
 const publicPath = (path) => `${import.meta.env.BASE_URL}${path}`;
-const downloadUrl = publicPath("downloads/Jiandan-Windows.zip");
+const downloadUrl = publicPath("downloads/Jiandan.exe");
 
 function Brand({compact = false}) {
   return <a className={`brand ${compact ? "brand--compact" : ""}`} href="#top" aria-label="剪蛋首页"><img src={publicPath("assets/jiandan.png")} alt="" /><span>剪蛋</span></a>;
