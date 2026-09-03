@@ -18,7 +18,7 @@ const copy = {
     proofBody: "剪蛋安静地待在后台，只在图片出现时接住它。你的键盘、文字剪贴板和剪映操作依然属于你。",
     status: "图片已准备进入作品", enabled: "已开启", filmKicker: "剪蛋的故事",
     filmTitle: "让每一次看见，\n更快进入作品。", play: "播放宣传片", finalTitle: "现在，让截图成为素材。",
-    finalBody: "适用于 Windows 与剪映专业版。开源、轻量，双击 run.bat 即可开始。",
+    finalBody: "适用于 Windows 与剪映专业版。开源、轻量，双击 Jiandan.exe 即可开始。",
     finalCta: "前往 GitHub 下载", source: "查看源代码", footer: "为每一个不想打断灵感的人而做。",
   },
   en: {
@@ -32,7 +32,7 @@ const copy = {
     proofBody: "Jiandan waits quietly in the background and responds only to images. Your keyboard, text clipboard, and editing workflow remain yours.",
     status: "Image ready for your project", enabled: "On", filmKicker: "The Jiandan story",
     filmTitle: "Let every moment you notice\nreach the work sooner.", play: "Play the film", finalTitle: "Make screenshots into material.",
-    finalBody: "Built for Windows and Jianying Pro. Open source, lightweight, and ready from run.bat.",
+    finalBody: "Built for Windows and Jianying Pro. Open source, lightweight, and ready from Jiandan.exe.",
     finalCta: "Download on GitHub", source: "View source", footer: "Made for anyone who does not want to interrupt an idea.",
   },
 };
