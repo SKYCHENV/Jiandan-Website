@@ -9,7 +9,7 @@ import {HeroThreeScene} from "./HeroThreeScene";
 const copy = {
   zh: {
     nav: ["产品", "使用方式", "故事"], language: "EN", eyebrow: "简单复制到剪映",
-    heroTitle: "看见即素材", lead: "看见的，成为作品。", body: "截图之后，灵感自然进入剪映。",
+    heroTitle: "看见即素材", lead: "看见的，成为作品。", body: "剪蛋是一款 Windows 工具，把截图或剪贴板图片直接粘贴到剪映专业版。",
     download: "下载 Windows 版", github: "查看 GitHub", scroll: "继续了解",
     flowKicker: "从看见，到作品", flowTitle: "三步，把看见的变成可编辑的素材",
     flowBody: "不用先发到聊天窗口，不用命名文件，也不用在文件夹里来回寻找。",
@@ -18,12 +18,12 @@ const copy = {
     proofBody: "剪蛋安静地待在后台，只在图片出现时接住它。你的键盘、文字剪贴板和剪映操作依然属于你。",
     status: "图片已准备进入作品", enabled: "已开启", filmKicker: "剪蛋的故事",
     filmTitle: "让每一次看见，\n更快进入作品。", play: "播放宣传片", finalTitle: "现在，让截图成为素材。",
-    finalBody: "适用于 Windows 与剪映专业版。开源、轻量，双击 Jiandan.exe 即可开始。",
+    finalBody: "适用于 Windows 与剪映专业版。源代码公开可查看，双击 Jiandan.exe 即可开始。",
     finalCta: "前往 GitHub 下载", source: "查看源代码", footer: "为每一个不想打断灵感的人而做。",
   },
   en: {
     nav: ["Product", "How it works", "Story"], language: "中", eyebrow: "Copy images into Jianying, simply",
-    heroTitle: "See it. Use it", lead: "What you see becomes the work.", body: "Capture it. Keep creating in Jianying.",
+    heroTitle: "See it. Use it", lead: "What you see becomes the work.", body: "Jiandan pastes screenshots and clipboard images into Jianying Pro on Windows.",
     download: "Download for Windows", github: "View on GitHub", scroll: "Discover more",
     flowKicker: "From sight to story", flowTitle: "Three steps from sight to editable material.",
     flowBody: "No chat window, no file naming, and no searching through folders before you can edit.",
@@ -32,7 +32,7 @@ const copy = {
     proofBody: "Jiandan waits quietly in the background and responds only to images. Your keyboard, text clipboard, and editing workflow remain yours.",
     status: "Image ready for your project", enabled: "On", filmKicker: "The Jiandan story",
     filmTitle: "Let every moment you notice\nreach the work sooner.", play: "Play the film", finalTitle: "Make screenshots into material.",
-    finalBody: "Built for Windows and Jianying Pro. Open source, lightweight, and ready from Jiandan.exe.",
+    finalBody: "Built for Windows and Jianying Pro. The source is publicly viewable, and Jiandan.exe is ready to run.",
     finalCta: "Download on GitHub", source: "View source", footer: "Made for anyone who does not want to interrupt an idea.",
   },
 };
@@ -122,5 +122,5 @@ export function App() {
   const t = copy[language];
   useEffect(() => {document.documentElement.lang = language === "zh" ? "zh-CN" : "en";}, [language]);
   useEffect(() => {const elements = document.querySelectorAll(".reveal"); const observer = new IntersectionObserver((entries) => {entries.forEach((entry) => {if (entry.isIntersecting) {entry.target.classList.add("is-visible"); observer.unobserve(entry.target);}});}, {threshold: 0.12}); elements.forEach((element) => observer.observe(element)); return () => observer.disconnect();}, [language]);
-  return <div id="top"><AppHeader language={language} setLanguage={setLanguage} menuOpen={menuOpen} setMenuOpen={setMenuOpen} t={t} /><main><Hero t={t} /><HowItWorks t={t} /><ProductProof t={t} /><Film t={t} /><Download t={t} /></main><footer><Brand compact /><p>{t.footer}</p><a href={githubUrl} target="_blank" rel="noreferrer"><GithubLogo weight="fill" />GitHub</a></footer></div>;
+  return <div id="top"><AppHeader language={language} setLanguage={setLanguage} menuOpen={menuOpen} setMenuOpen={setMenuOpen} t={t} /><main><Hero t={t} /><HowItWorks t={t} /><ProductProof t={t} /><Film t={t} /><Download t={t} /></main><footer><Brand compact /><div className="footer-center"><p>{t.footer}</p><nav aria-label={language === "zh" ? "产品文档" : "Product documentation"}><a href={language === "zh" ? "/download/" : "/en/download/"}>{language === "zh" ? "下载" : "Download"}</a><a href={language === "zh" ? "/docs/quick-start/" : "/en/docs/quick-start/"}>{language === "zh" ? "快速开始" : "Quick start"}</a><a href={language === "zh" ? "/docs/compatibility/" : "/en/"}>{language === "zh" ? "兼容性" : "English"}</a></nav></div><a href={githubUrl} target="_blank" rel="noreferrer"><GithubLogo weight="fill" />GitHub</a></footer></div>;
 }

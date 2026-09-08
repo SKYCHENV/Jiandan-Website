@@ -18,10 +18,10 @@ test("serves existing static assets without a fallback", async () => {
   assert.deepEqual(calls, ["/assets/app.js"]);
 });
 
-test("falls back to index.html for an unknown app route", async () => {
+test("serves a prerendered public route", async () => {
   const calls = [];
   const response = await worker.fetch(
-    new Request("https://example.test/flow/step-two?source=share", {
+    new Request("https://example.test/docs/quick-start/?source=share", {
       headers: { accept: "text/html" },
     }),
     {
@@ -29,8 +29,8 @@ test("falls back to index.html for an unknown app route", async () => {
         fetch: async (request) => {
           const url = new URL(request.url);
           calls.push(url.pathname + url.search);
-          return new Response(url.pathname === "/index.html" ? "app" : "missing", {
-            status: url.pathname === "/index.html" ? 200 : 404,
+          return new Response(url.pathname === "/docs/quick-start/index.html" ? "guide" : "missing", {
+            status: url.pathname === "/docs/quick-start/index.html" ? 200 : 404,
           });
         },
       },
@@ -38,7 +38,42 @@ test("falls back to index.html for an unknown app route", async () => {
   );
 
   assert.equal(response.status, 200);
-  assert.deepEqual(calls, ["/flow/step-two?source=share", "/index.html"]);
+  assert.deepEqual(calls, ["/docs/quick-start/?source=share", "/docs/quick-start/index.html"]);
+});
+
+test("redirects canonical public routes to a trailing slash", async () => {
+  const response = await worker.fetch(
+    new Request("https://example.test/download?source=share", {headers: {accept: "text/html"}}),
+    {ASSETS: {fetch: async () => new Response("missing", {status: 404})}},
+  );
+
+  assert.equal(response.status, 308);
+  assert.equal(response.headers.get("location"), "https://example.test/download/?source=share");
+});
+
+test("returns a real 404 document for an unknown route", async () => {
+  const calls = [];
+  const response = await worker.fetch(
+    new Request("https://example.test/flow/unknown", {headers: {accept: "text/html"}}),
+    {ASSETS: {fetch: async (request) => {
+      const pathname = new URL(request.url).pathname;
+      calls.push(pathname);
+      return new Response(pathname === "/404.html" ? "not found" : "missing", {status: pathname === "/404.html" ? 200 : 404});
+    }}},
+  );
+
+  assert.equal(response.status, 404);
+  assert.deepEqual(calls, ["/flow/unknown", "/404.html"]);
+});
+
+test("serves admin shell with noindex header", async () => {
+  const response = await worker.fetch(
+    new Request("https://example.test/admin", {headers: {accept: "text/html"}}),
+    {ASSETS: {fetch: async (request) => new Response(new URL(request.url).pathname === "/admin/index.html" ? "admin" : "missing", {status: new URL(request.url).pathname === "/admin/index.html" ? 200 : 404})}},
+  );
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow");
 });
 
 test("does not turn missing API or write requests into the app shell", async () => {
@@ -63,6 +98,10 @@ test("does not turn missing API or write requests into the app shell", async () 
 
 test("emits the files required by Sites packaging", async () => {
   await access(new URL("../dist/client/index.html", import.meta.url));
+  await access(new URL("../dist/client/download/index.html", import.meta.url));
+  await access(new URL("../dist/client/sitemap.xml", import.meta.url));
+  await access(new URL("../dist/client/robots.txt", import.meta.url));
+  await access(new URL("../dist/client/404.html", import.meta.url));
   await access(new URL("../dist/server/index.js", import.meta.url));
   await access(new URL("../dist/.openai/hosting.json", import.meta.url));
 });

@@ -1,13 +1,28 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./App.jsx";
-import { AdminApp } from "./AdminApp.jsx";
 import "./styles.css";
 
-const RootApp = window.location.pathname.replace(/\/+$/u, "") === "/admin" ? AdminApp : App;
+const pathname = window.location.pathname;
+const normalizedPath = pathname.replace(/\/+$/u, "") || "/";
 
-createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RootApp />
-  </React.StrictMode>,
-);
+async function bootstrap() {
+  let root;
+  if (normalizedPath === "/admin") {
+    const {AdminApp} = await import("./AdminApp.jsx");
+    root = <AdminApp />;
+  } else if (normalizedPath === "/") {
+    const {App} = await import("./App.jsx");
+    root = <App />;
+  } else {
+    const {resolvePublicApp} = await import("./ContentPages.jsx");
+    root = resolvePublicApp(pathname);
+  }
+
+  createRoot(document.getElementById("root")).render(
+    <React.StrictMode>
+      {root}
+    </React.StrictMode>,
+  );
+}
+
+bootstrap();

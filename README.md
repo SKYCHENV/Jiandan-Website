@@ -1,8 +1,8 @@
 # 剪蛋官网 / Jiandan Website
 
-剪蛋是一个面向 Windows 与剪映专业版的开源小工具。它识别剪贴板中的图片，让截图自然进入剪映素材工作流，不必先保存到聊天窗口或手动整理文件。
+剪蛋是一个面向 Windows 与剪映专业版的图片粘贴工具。它识别剪贴板中的图片，让截图自然进入剪映素材工作流，不必先保存到聊天窗口或手动整理文件。
 
-This repository contains the official bilingual website for Jiandan, an open-source Windows utility that turns clipboard images into ready-to-use Jianying Pro material.
+This repository contains the official bilingual website for Jiandan, a Windows utility that turns clipboard images into ready-to-use Jianying Pro material.
 
 ## 技术栈 / Stack
 
@@ -31,8 +31,8 @@ The production site is generated in `dist/`. The build also prepares the Sites w
 ## 项目链接 / Project
 
 - 剪蛋主项目 / Main app: https://github.com/SKYCHENV/Jiandan
-- Windows 下载 / Download: served from `public/downloads/Jiandan-Windows.zip`
+- Windows 下载 / Download: https://github.com/SKYCHENV/Jiandan/releases/tag/v1.1.0
 
 ## License
 
-MIT
+No software license is currently declared in this repository. Public visibility does not by itself grant permission to copy, modify, or redistribute the code.
