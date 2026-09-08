@@ -35,4 +35,4 @@ The production site is generated in `dist/`. The build also prepares the Sites w
 
 ## License
 
-No software license is currently declared in this repository. Public visibility does not by itself grant permission to copy, modify, or redistribute the code.
+The website source in this repository is licensed under MIT. The separate Jiandan desktop application repository does not currently declare a software license; do not assume the website license applies to the desktop application.
