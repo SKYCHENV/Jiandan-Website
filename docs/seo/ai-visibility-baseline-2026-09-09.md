@@ -39,6 +39,7 @@
 - 已将现有知乎回答的官网链接从裸域更新为规范地址 `https://www.jiandan.qd.je/`，没有重复创建问题或回答。
 - 主项目中英文 README 已增加官网、官方下载、快速开始和 v1.1.0 发布页的互链。
 - GitHub 仓库 About 已补充规范官网、精确产品描述和 `jianying`、`clipboard`、`screenshot`、`windows`、`video-editing`、`productivity`、`python` 主题。
+- GitHub v1.1.0 发布说明已增加官网、官方下载说明和快速开始的规范链接，发布资产与校验摘要保持不变。
 - Google Search Console 与百度搜索资源平台已完成站点所有权验证；Google sitemap 已成功处理 14 个网页。
 
 ## D14 复测门槛

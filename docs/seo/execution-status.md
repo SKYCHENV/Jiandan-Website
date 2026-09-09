@@ -22,7 +22,7 @@
 - Google Search Console 网址前缀资源已验证，站点地图已成功处理并发现 14 个网页。
 - 百度搜索资源平台站点所有权已通过 HTML 标签验证；验证标记已上线且登录 API 回归正常。
 - 现有知乎回答已完成单次事实更新，官网链接统一为 `https://www.jiandan.qd.je/`；知乎 AI 搜索已能主动识别并正确概括剪蛋。
-- 主项目中英文 README、GitHub About 官网、精确描述和七个主题已补齐，形成官网、下载页、GitHub、知乎之间的权威互链。
+- 主项目中英文 README、GitHub About 官网、精确描述、七个主题和 v1.1.0 发布说明已补齐，形成官网、下载页、GitHub、知乎之间的权威互链。
 - D0 AI 可见性基线已记录：知乎 AI 为 M4；ChatGPT、Gemini、豆包为 M1；DeepSeek、Kimi、Perplexity、Copilot 因网络、登录或安全验证未完成。
 
 ## 后续执行
