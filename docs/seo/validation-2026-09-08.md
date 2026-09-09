@@ -40,6 +40,16 @@
 
 本机没有 `JIANDAN_BUILD_BREVO_API_KEY`、发件人和管理员列表环境变量，因此本地生成的 EdgeOne 目录只用于构建结构验证，不能直接覆盖生产登录配置。正式发布应由已配置这些变量的 EdgeOne 项目从已验证提交构建，发布后再做登录和管理后台冒烟。
 
+## 生产发布复核（2026-09-09）
+
+- GitHub `main` 已发布提交 `864f2d7`；官网源码仓库与生产构建保持同一页面树。
+- EdgeOne 生产部署 `dppxzuiuh707` 成功。部署包保留 v1.1.0 已验证登录函数，仅替换静态页面与 SEO 文件，未把邮件密钥或管理员信息提交到 GitHub。
+- `https://www.jiandan.qd.je/`、`/download/`、`/docs/quick-start/`、`robots.txt` 和 `sitemap.xml` 均返回 200；未知路径返回真实 404。
+- `POST /api/auth/request-code` 使用无效邮箱做无副作用冒烟，返回预期的 400 JSON，证明桌面端依赖的登录路由仍由 EdgeOne Function 接管。
+- 线上桌面首屏和 390x844 手机首屏完成视觉复核；首页标题、下载入口、演示画面与下一节均可见。
+- IndexNow 已提交 sitemap 中的 14 个规范 URL，接口返回 HTTP 202 Accepted。该状态只表示已接收，不代表已经收录或获得排名。
+- 裸域 `https://jiandan.qd.je/` 仍由 GitHub Pages 提供无索引跳转页并导向 `www`；规范页、站点地图与登录 API 均以 `www` 为生产主机。
+
 ## 当前搜索基线（上线前）
 
 2026-09-08 对“剪蛋 SKYCHENV”“剪蛋 截图 剪映”“jiandan.qd.je”“截图直接粘贴到剪映 Windows 工具”等查询复核，公开搜索结果没有稳定返回官网；泛需求结果主要被剪映官网和通用截图工具占据。该结果记录为上线前 M0/M3 基线，不宣称任何引擎已收录本轮页面。
