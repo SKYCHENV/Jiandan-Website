@@ -21,13 +21,15 @@
 - IndexNow 已提交 14 个规范 URL并收到 HTTP 202 Accepted。
 - Google Search Console 网址前缀资源已验证，站点地图已成功处理并发现 14 个网页。
 - 百度搜索资源平台站点所有权已通过 HTML 标签验证；验证标记已上线且登录 API 回归正常。
+- 现有知乎回答已完成单次事实更新，官网链接统一为 `https://www.jiandan.qd.je/`；知乎 AI 搜索已能主动识别并正确概括剪蛋。
+- 主项目中英文 README、GitHub About 官网、精确描述和七个主题已补齐，形成官网、下载页、GitHub、知乎之间的权威互链。
+- D0 AI 可见性基线已记录：知乎 AI 为 M4；ChatGPT、Gemini、豆包为 M1；DeepSeek、Kimi、Perplexity、Copilot 因网络、登录或安全验证未完成。
 
 ## 后续执行
 
 - 完成 Bing Webmaster Tools 账号授权与站点验证；IndexNow 已覆盖 Bing 的主动发现入口。
 - 百度当日 sitemap 配额为 0，手动提交也达到当日上限；待平台次日刷新额度后提交 14 个规范 URL，并以后台反馈为准记录接收结果。
-- 复核现有知乎答案的版本、下载页和 GitHub 链接，再做单次事实更新；不重复自问自答。
-- D0、D14、D30 使用既有题库做独立新会话测试，保留引用 URL 和 M0-M5 分类。
+- D14、D30 使用 `ai-visibility-baseline-2026-09-09.md` 中的固定问题与 M0-M5 规则做独立新会话复测，保留引用 URL；登录或网络失败不计入命中率分母。
 
 ## 尚需真实素材后完成
 
