@@ -16,14 +16,16 @@
 - C04-C06 的文字工作流：软件教程、图文复用、资料讲解；没有冒称剪蛋能写作、排版或自动成片。
 - C07：三种截图导入方法的客观比较页。
 - P2：关于页与正式版本更新页。
-- GitHub `main` 已推送 SEO 页面；当前 EdgeOne 生产部署 `dp1boillvogo` 已上线。
+- GitHub `main` 已推送 SEO 页面与 Google 验证文件；当前 EdgeOne 生产部署 `dp5m49y3l45a` 已上线。
 - 生产首页、下载、快速开始、robots、sitemap、404 与登录 API 冒烟通过。
 - IndexNow 已提交 14 个规范 URL并收到 HTTP 202 Accepted。
 - Google Search Console 网址前缀资源已验证，站点地图已成功处理并发现 14 个网页。
+- 百度搜索资源平台站点所有权已通过 HTML 标签验证；验证标记已上线且登录 API 回归正常。
 
 ## 后续执行
 
-- 完成 Bing Webmaster Tools 和百度搜索资源平台的账号授权、站点验证与 sitemap 提交。
+- 完成 Bing Webmaster Tools 账号授权与站点验证；IndexNow 已覆盖 Bing 的主动发现入口。
+- 百度当日 sitemap 配额为 0，手动提交也达到当日上限；待平台次日刷新额度后提交 14 个规范 URL，并以后台反馈为准记录接收结果。
 - 复核现有知乎答案的版本、下载页和 GitHub 链接，再做单次事实更新；不重复自问自答。
 - D0、D14、D30 使用既有题库做独立新会话测试，保留引用 URL 和 M0-M5 分类。
 
