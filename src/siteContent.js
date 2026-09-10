@@ -16,6 +16,7 @@ export const publicRoutes = [
   "/download/",
   "/docs/quick-start/",
   "/docs/compatibility/",
+  "/docs/faq/",
   "/guides/paste-screenshot-jianying/",
   "/workflows/tutorial-videos/",
   "/workflows/graphic-to-video/",
@@ -26,6 +27,7 @@ export const publicRoutes = [
   "/en/",
   "/en/download/",
   "/en/docs/quick-start/",
+  "/en/docs/faq/",
 ];
 
 const common = {
@@ -34,6 +36,52 @@ const common = {
 };
 
 export const pages = {
+  "/docs/faq/": {
+    ...common,
+    updated: "2026-09-10",
+    locale: "zh-CN",
+    eyebrow: "常见问题",
+    title: "剪蛋是什么？截图导入剪映与创作工作流问答",
+    description: "了解剪蛋 Jiandan 如何把 Windows 剪贴板图片导入剪映专业版，以及教程配图、图文转视频、截图清晰度、登录、隐私和兼容性限制。",
+    summary: "剪蛋 Jiandan 是面向 Windows 与剪映专业版的图片粘贴工具。它连接的是截图与视频素材，不是 AI 生成器、图文编辑器或另一款剪辑软件。",
+    cta: "查看操作步骤",
+    ctaHref: "/docs/quick-start/",
+    secondary: "官方 GitHub",
+    secondaryHref: site.github,
+    sections: [
+      {heading: "有没有把截图直接放进剪映的工具？", paragraphs: ["剪蛋适用于这个需求：启动并登录剪蛋，打开剪映专业版草稿的素材页，截图或复制一张图片，再回到剪映按 Ctrl+V。剪蛋将图片转成剪映可导入的本地素材，并通过剪映原生素材卡添加命令加入时间线。目标落位是播放头位置、现有画面轨道上方；实际行为受剪映版本与界面状态影响。"]},
+      {heading: "做教程、知识讲解或产品对比时能用它做什么？", paragraphs: ["可以把软件步骤截图、自己做的知识卡片、获得授权的产品图或报告局部作为画面素材。先确定每张图对应哪一句讲解，再逐张粘贴进剪映。标注、旁白、字幕、时长、缩放与成片导出仍由创作者在对应工具中完成。"]},
+      {heading: "已有图文能不能复用成视频？", paragraphs: ["可以把自己制作或已获授权的图文卡片作为图片素材加入剪映，再重新安排讲解顺序。剪蛋只缩短图片转运，不会把图文自动变成视频，也不会把截图变成可编辑的文字图层。需要修改卡片内容时，应回到原始设计文件。"]},
+      {heading: "截图会不会变清晰？应该截图还是导入原图？", paragraphs: ["剪蛋不会提升截图分辨率，也不承诺无损转换。需要小字清晰、透明背景或高分辨率画面时，优先使用原始文件并检查导入后的结果。截图更适合演示当前软件界面或引用必要局部；已有一批原图需要整理归档时，剪映原生文件导入通常更合适。"]},
+      {heading: "为什么图片到了素材区，时间线上却不对？", paragraphs: ["素材导入和时间线添加是两个环节。先核对新导入的缩略图是不是这次的图片，再检查时间线上的素材和播放头位置。若出现旧图、错误选中或没有添加，先停止重复粘贴，不要连续触发；可以在新建的测试草稿复现，并记录剪映版本、界面布局和步骤向 GitHub Issues 反馈。当前版本不承诺任意布局和素材列表状态都成功。"]},
+      {heading: "支持手机、Mac、CapCut 或文字粘贴吗？", paragraphs: ["当前公开范围是 Windows 10/11 与剪映专业版的剪贴板图片。没有宣称支持 macOS、剪映手机版或 CapCut Desktop；文字、视频和文件列表也不属于图片导入范围。其他应用的粘贴和普通文字 Ctrl+V 应保留系统行为。"]},
+      {heading: "需要登录吗？图片会上传吗？", paragraphs: ["首次使用需要邮箱验证码。退出程序与退出登录不同：正常退出程序后可恢复本地保存的登录状态，会话最长保持 30 天；同一邮箱在新设备登录会使旧设备退出。登录与会话校验需要联网，图片与剪贴板内容不上传。图片会落成本地素材文件，不等于不占磁盘；仍被草稿引用的图片不要随意删除。"]},
+      {heading: "从哪里下载，能否把公开代码当作商用授权？", paragraphs: ["正式下载由 SKYCHENV/Jiandan 的 GitHub Release 提供，官网的下载页列出版本、文件大小和 SHA-256。当前核对的正式版为 v1.1.0。仓库公开可查看，但当前没有可识别的软件许可证，不应据此推断商用或再分发授权。"]},
+    ],
+    related: [["软件教程配图", "/workflows/tutorial-videos/"], ["图文复用成视频", "/workflows/graphic-to-video/"], ["资料讲解与来源记录", "/workflows/research-to-content/"], ["三种导入方法比较", "/compare/screenshot-import-methods/"], ["下载与校验", "/download/"], ["English FAQ", "/en/docs/faq/"]],
+  },
+  "/en/docs/faq/": {
+    ...common,
+    updated: "2026-09-10",
+    locale: "en",
+    eyebrow: "Frequently asked questions",
+    title: "What is Jiandan? Screenshot-to-Jianying workflow FAQ",
+    description: "Jiandan FAQ: paste clipboard images into Jianying Pro on Windows, reuse tutorial graphics, understand image quality, sign-in, local files and compatibility limits.",
+    summary: "Jiandan (剪蛋) is a Windows clipboard-image utility for Jianying Pro. It transfers screenshots into editing media; it does not generate images, design posts, or automatically make videos.",
+    cta: "Read the quick start",
+    ctaHref: "/en/docs/quick-start/",
+    sections: [
+      {heading: "Can I paste a screenshot into Jianying Pro?", paragraphs: ["With Jiandan running and signed in, open a Jianying Pro draft on its Media page, capture or copy an image, then press Ctrl+V in Jianying. Jiandan imports a local image and invokes Jianying's native media-card action. Placement is intended at the playhead above existing visual tracks, but depends on the Jianying version and UI state."]},
+      {heading: "What can creators use it for?", paragraphs: ["Software walkthrough screenshots, original knowledge cards, licensed product visuals, and source excerpts for narrated explainers. Match each image to a line in your script, paste the image, then handle framing, duration, annotation, narration and export in your editing tools. Jiandan does not perform those editing steps."]},
+      {heading: "Can existing graphic posts become video material?", paragraphs: ["Original or licensed cards can be reused as still-image media in Jianying. They do not become editable text layers and Jiandan does not automatically turn a post into a video. Use your original design files to change the content."]},
+      {heading: "Does it improve resolution or replace original files?", paragraphs: ["No. Jiandan does not upscale screenshots or promise lossless conversion. Use original high-resolution files when small text, transparency or image fidelity matters. Native file import is often more suitable for an existing organized image collection."]},
+      {heading: "What if import works but timeline placement does not?", paragraphs: ["Import and placement are separate operations. Check that both the new media thumbnail and the timeline show the current image. Stop repeated pastes if an old image is selected or nothing is added. Reproduce in a disposable test draft and report the Jianying version, layout and steps through GitHub Issues. Success in every layout and media-list state is not promised."]},
+      {heading: "Is CapCut Desktop or macOS supported?", paragraphs: ["The published scope is Windows 10/11 and Jianying Pro. This release does not claim CapCut Desktop, macOS or mobile compatibility. It handles clipboard images, not text, videos or file lists. Ordinary text paste and paste in other apps should remain unchanged."]},
+      {heading: "Are sign-in and local image storage required?", paragraphs: ["First use requires email verification and session checks require an internet connection. Normal app exit preserves the encrypted local session for up to 30 days; signing in on another device invalidates the old session. Images and clipboard contents are not uploaded. Images are stored locally for use as media; do not delete files still referenced by a draft."]},
+      {heading: "Where is the official release and license?", paragraphs: ["Use SKYCHENV/Jiandan on GitHub and the official download page to verify v1.1.0, file size and SHA-256. The repository is publicly viewable but currently has no identifiable software license. Public visibility alone is not redistribution or commercial-use permission."]},
+    ],
+    related: [["Download and checksum", "/en/download/"], ["Official GitHub", site.github], ["中文问答", "/docs/faq/"]],
+  },
   "/download/": {
     ...common,
     locale: "zh-CN",
@@ -84,7 +132,7 @@ export const pages = {
       ]},
       {heading: "不会被接管的粘贴", paragraphs: ["在其他应用中粘贴，或剪贴板内容是文字时，剪蛋应保留系统原来的 Ctrl+V 行为。剪蛋不会把图片或剪贴板内容上传到服务端。"]},
     ],
-    related: [["深入理解工作方式", "/guides/paste-screenshot-jianying/"], ["兼容性与限制", "/docs/compatibility/"]],
+    related: [["深入理解工作方式", "/guides/paste-screenshot-jianying/"], ["兼容性与限制", "/docs/compatibility/"], ["常见问题与创作场景", "/docs/faq/"]],
   },
   "/docs/compatibility/": {
     ...common,
@@ -202,7 +250,7 @@ export const pages = {
       {heading: "产品原则", notes: ["只在剪映前台且剪贴板为图片时响应，不占用正常文字粘贴。", "图片留在本机，不把剪贴板内容上传。", "使用剪映原生流程完成导入和落位，不把宣传功能写成未验证承诺。"]},
       {heading: "项目与反馈", paragraphs: ["源代码、正式版本和问题反馈集中在 SKYCHENV/Jiandan。当前仓库未提供可识别的软件许可证；如需复制、修改或再分发，请先向维护者确认授权。"]},
     ],
-    related: [["打开 GitHub", site.github], ["查看兼容性", "/docs/compatibility/"]],
+    related: [["打开 GitHub", site.github], ["查看兼容性", "/docs/compatibility/"], ["常见问题与创作场景", "/docs/faq/"]],
   },
   "/en/": {
     ...common,
@@ -251,7 +299,7 @@ export const pages = {
       {heading: "Five steps", steps: [["1", "Start Jiandan", "Open Jiandan.exe and complete email verification on first use."], ["2", "Open a draft", "Open Jianying Pro and stay on the Media page."], ["3", "Capture", "Take a Windows screenshot or copy an image."], ["4", "Paste", "Return to Jianying and press Ctrl+V."], ["5", "Edit", "The image enters the media library and is placed at the playhead above the existing visual track."]]},
       {heading: "If nothing happens", notes: ["Confirm that Jiandan says it is enabled.", "Confirm that Jianying is the foreground app and the Media page is open.", "Copy the image again; text and non-image clipboard content do not trigger import.", "Report reproducible UI changes through GitHub Issues."]},
     ],
-    related: [["English home", "/en/"], ["Compatibility in Chinese", "/docs/compatibility/"]],
+    related: [["English home", "/en/"], ["Compatibility in Chinese", "/docs/compatibility/"], ["Workflow FAQ", "/en/docs/faq/"]],
   },
 };
 

@@ -73,3 +73,23 @@ test("published copy does not claim unverified platform or license support", asy
   assert.match(all, /(?:不|没有)宣称支持.*CapCut Desktop/u);
   assert.match(all, /does not claim.*CapCut Desktop/iu);
 });
+
+test("workflow FAQs are readable, linked, bilingual and explicit about limits", async () => {
+  for (const [route, sibling, entry] of [
+    ["/docs/faq/", "/en/docs/faq/", "/docs/quick-start/"],
+    ["/en/docs/faq/", "/docs/faq/", "/en/docs/quick-start/"],
+  ]) {
+    const html = await readRoute(route);
+    assert.ok(publicRoutes.includes(route));
+    assert.ok(html.includes(`href="${site.origin}${sibling}"`));
+    assert.ok((await readRoute(entry)).includes(`href="${route}"`));
+    assert.ok(html.includes(site.github));
+    assert.match(html, /CapCut Desktop/u);
+    assert.match(html, /v1\.1\.0/u);
+    assert.ok((html.match(/<h2>/gu) || []).length >= 8);
+    const graph = JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/u)[1])["@graph"];
+    assert.equal(graph.find((item) => item["@type"] === "TechArticle").about["@id"], `${site.origin}/#software`);
+  }
+  assert.match(await readRoute("/docs/faq/"), /实际行为受剪映版本与界面状态影响/u);
+  assert.match(await readRoute("/en/docs/faq/"), /does not upscale/u);
+});

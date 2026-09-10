@@ -52,6 +52,7 @@ function alternates(route) {
   const pairs = {
     "/": "/en/", "/en/": "/", "/download/": "/en/download/", "/en/download/": "/download/",
     "/docs/quick-start/": "/en/docs/quick-start/", "/en/docs/quick-start/": "/docs/quick-start/",
+    "/docs/faq/": "/en/docs/faq/", "/en/docs/faq/": "/docs/faq/",
   };
   const counterpart = pairs[route];
   if (!counterpart) return `<link rel="alternate" hreflang="zh-CN" href="${absolute(route)}">`;
@@ -68,7 +69,7 @@ function schema(route, page) {
   if (["/", "/en/", "/download/", "/en/download/"].includes(route)) {
     graph.push({"@type": "SoftwareApplication", "@id": `${site.origin}/#software`, name: english ? "Jiandan" : "剪蛋 Jiandan", applicationCategory: "MultimediaApplication", operatingSystem: "Windows 10, Windows 11", softwareVersion: site.version, downloadUrl: site.download, url: absolute(route), description: page?.description || "把截图或剪贴板图片直接粘贴到剪映专业版的 Windows 工具。", publisher: {"@id": `${site.origin}/#organization`}});
   } else if (page) {
-    graph.push({"@type": "TechArticle", headline: page.title, description: page.description, dateModified: page.updated, inLanguage: page.locale, mainEntityOfPage: absolute(route), author: {"@id": `${site.origin}/#organization`}, publisher: {"@id": `${site.origin}/#organization`}});
+    graph.push({"@type": "TechArticle", headline: page.title, description: page.description, dateModified: page.updated, inLanguage: page.locale, mainEntityOfPage: absolute(route), about: {"@id": `${site.origin}/#software`}, author: {"@id": `${site.origin}/#organization`}, publisher: {"@id": `${site.origin}/#organization`}});
   }
   if (route !== "/") graph.push({"@type": "BreadcrumbList", itemListElement: [{"@type": "ListItem", position: 1, name: english ? "Jiandan" : "剪蛋", item: absolute(english ? "/en/" : "/")}, {"@type": "ListItem", position: 2, name: page.title, item: absolute(route)}]});
   return JSON.stringify({"@context": "https://schema.org", "@graph": graph}).replaceAll("<", "\\u003c");
